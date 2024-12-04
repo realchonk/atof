@@ -1,6 +1,6 @@
 #!/bin/sh
 
-n=10
+n=20
 times=0.0
 
 for i in $(seq "$n"); do

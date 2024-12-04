@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -37,46 +38,59 @@ float empty (const char *s)
 	return 0.0f;
 }
 
-float custom (const char *s)
+inline static bool fast_isdigit (int ch)
 {
-	float f = 0.0f, x;
-	int sign = 1;
-	int ival = 0, exp;
-
-	for (; isspace (*s); ++s);
-
-	if (*s == '-') {
-		sign = -1;
-		++s;
-	}
-
-	for (ival = 0; isdigit (*s); ++s)
-		ival = ival * 10 + (*s - '0');
-
-	if (*s != '.')
-		goto skip;
-	++s;
-
-	for (x = 0.1f; isdigit (*s); ++s, x *= 0.1f)
-		f += (*s - '0') * x;
-skip:
-	f = sign * (f + ival);
-	if (*s != 'e' && *s != 'E')
-		return f;
-	++s;
-
-	exp = 0;
-	sign = 1;
-	if (*s == '-') {
-		sign = -1;
-		++s;
-	}
-
-	while (isdigit (*s))
-		exp = exp * 10 + (*s++ - '0');
-
-	return powf (10.0f, sign * exp) * f;
+	return ch >= '0' && ch <= '9';
 }
+
+#if FAST_ISDIGIT
+# define isdigit(ch) fast_isdigit(ch)
+#endif
+
+#define def_custom(name, isdigit)			\
+float name (const char *s)				\
+{							\
+	float f = 0.0f, x;				\
+	int sign = 1;					\
+	int ival = 0, exp;				\
+							\
+	for (; isspace (*s); ++s);			\
+							\
+	if (*s == '-') {				\
+		sign = -1;				\
+		++s;					\
+	}						\
+							\
+	for (ival = 0; isdigit (*s); ++s)		\
+		ival = ival * 10 + (*s - '0');		\
+							\
+	if (*s != '.')					\
+		goto skip;				\
+	++s;						\
+							\
+	for (x = 0.1f; isdigit (*s); ++s, x *= 0.1f)	\
+		f += (*s - '0') * x;			\
+skip:							\
+	f = sign * (f + ival);				\
+	if (*s != 'e' && *s != 'E')			\
+		return f;				\
+	++s;						\
+							\
+	exp = 0;					\
+	sign = 1;					\
+	if (*s == '-') {				\
+		sign = -1;				\
+		++s;					\
+	}						\
+							\
+	while (isdigit (*s))				\
+		exp = exp * 10 + (*s++ - '0');		\
+							\
+	return powf (10.0f, sign * exp) * f;		\
+}
+
+def_custom(custom, isdigit)
+def_custom(custom_fast_isdigit, fast_isdigit)
 
 float dumb (const char *s)
 {

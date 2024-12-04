@@ -1,8 +1,9 @@
+FUNCS = empty xstrtod custom custom_fast_isdigit dumb
+#FUNCS = empty xstrtof xstrtod xstrtold xatof custom custom_fast_isdigit dumb
+
 COPT = -O2 -march=native
 CFLAGS = -Wall -Wextra ${COPT}
-FUNCS = empty xstrtod custom dumb
-#FUNCS = empty xstrtof xstrtod xstrtold xatof custom dumb
-N = 32768
+N = 65536
 
 all: ${FUNCS}
 
