@@ -1,0 +1,14 @@
+#!/bin/sh
+
+n=10
+times=0.0
+
+for i in $(seq "$n"); do
+	printf '%s/%s... ' "$1" "$i" >&2
+	t=$(/usr/bin/time -p "./$1" < "$2.dat" 2>&1 >/dev/null | sed -n '/^user */s///p')
+	t=$(echo "scale=6; $t * 1000000 / $2" | bc)
+	times=$(echo "scale=6; $times + $t" | bc)
+	printf '%.2fus\n' "$t"
+done
+
+printf '%s: %.2fus\n\n' "$1" "$(echo "scale=6; $times / $n" | bc)"
