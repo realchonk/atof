@@ -98,7 +98,7 @@ float dumb (const char *s)
 	int ival, sign = 1, exp;
 
 	// sign = '-' ? 1 : -1
-	sign = 1 - ((*s++ - '-') * 2);
+	sign = 1 - ((*s++ == '-') * 2);
 	ival = *s++ - '0';
 
 	// skip '.'
@@ -121,6 +121,48 @@ float dumb (const char *s)
 
 	return sign * (ival + f) * powf (10.0f, -exp);
 }
+
+float custom2 (const char *s)
+{
+	float f = 0.0f, x;
+	int sign = 1, ival = 0, exp;
+
+	for (; isspace (*s); ++s);
+
+	if (*s == '-') {
+		sign = -1;
+		++s;
+	}
+
+	for (ival = 0; isdigit (*s); ++s)
+		ival = ival * 10 + (*s - '0');
+
+	if (*s != '.')
+		goto skip;
+	++s;
+
+	for (x = 0.1f; isdigit (*s); ++s, x *= 0.1f)
+		f += (*s - '0') * x;
+
+skip:
+	f = sign * (f + ival);
+
+	if (*s != 'e' && *s != 'E')
+		return f;
+	++s;
+
+	sign = 1;
+	if (*s == '-') {
+		sign = -1;
+		++s;
+	}
+
+	for (exp = 0; isdigit (*s); ++s)
+		exp = exp * 10 + (*s - '0');
+
+	return powf (10.0f, sign * exp) * f;
+}
+
 
 static float(*parser)(const char *) = FUNC;
 
