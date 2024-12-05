@@ -1,9 +1,13 @@
 FUNCS = empty xstrtod custom custom_fast_isdigit dumb
+
+# uncomment this line for more functions to benchmark
 #FUNCS = empty xstrtof xstrtod xstrtold xatof custom custom_fast_isdigit dumb
+
+# number of times to repeat data.in
+N = 65536
 
 COPT = -O2 -march=native
 CFLAGS = -Wall -Wextra ${COPT}
-N = 65536
 
 all: ${FUNCS}
 
