@@ -7,7 +7,7 @@ FUNCS = empty xstrtod custom custom2 dumb
 N = 16384
 
 COPT = -O2 -march=native
-CFLAGS = -Wall -Wextra ${COPT}
+CFLAGS = -std=c99 -Wall -Wextra ${COPT}
 
 all: ${FUNCS} custom3
 
