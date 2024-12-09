@@ -3,7 +3,7 @@ FUNCS = empty custom2 dumb
 # uncomment this line for more functions to benchmark
 #FUNCS = empty xstrtof xstrtod xstrtold xatof custom custom_fast_isdigit custom2 dumb
 
-ALL = ${FUNCS} custom3 dumb2 custom4
+ALL = ${FUNCS} custom3 dumb2 custom4 custom4_stdio
 
 # number of times to repeat data.in
 N = 16384
