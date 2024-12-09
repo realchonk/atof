@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include <math.h>
 
+#include "pow10f.h"
+
 float ident (float x)
 {
 	return x;
@@ -43,9 +45,11 @@ inline static bool fast_isdigit (int ch)
 	return ch >= '0' && ch <= '9';
 }
 
+
 #if FAST_ISDIGIT
 # define isdigit(ch) fast_isdigit(ch)
 #endif
+
 
 #define def_custom(name, isdigit)			\
 float name (const char *s)				\
@@ -86,7 +90,7 @@ skip:							\
 	while (isdigit (*s))				\
 		exp = exp * 10 + (*s++ - '0');		\
 							\
-	return powf (10.0f, sign * exp) * f;		\
+	return pow10f (sign, exp) * f;			\
 }
 
 def_custom(custom, isdigit)
@@ -104,7 +108,6 @@ float dumb (const char *s)
 	// skip '.'
 	++s;
 
-	exp = -1;
 	x = 0.1f;
 	for (int i = 0; i < 14; ++i, ++s, x *= 0.1f)
 		f += (*s - '0') * x;
@@ -119,7 +122,7 @@ float dumb (const char *s)
 	for (int i = 0; i < 3; ++i)
 		exp = exp * 10 + (*s++ - '0');
 
-	return sign * (ival + f) * powf (10.0f, -exp);
+	return sign * (ival + f) * pow10f (-1, exp);
 }
 
 float custom2 (const char *s)
@@ -160,9 +163,8 @@ skip:
 	for (exp = 0; isdigit (*s); ++s)
 		exp = exp * 10 + (*s - '0');
 
-	return powf (10.0f, sign * exp) * f;
+	return pow10f (sign, exp) * f;
 }
-
 
 static float(*parser)(const char *) = FUNC;
 

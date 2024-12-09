@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <math.h>
+#include "pow10f.h"
+
+#define fgetc(file) getc_unlocked((file))
 
 float ident (float f)
 {
@@ -60,7 +63,7 @@ skip:
 	for (exp = 0; isdigit (ch); ch = fgetc (file))
 		exp = exp * 10 + (ch - '0');
 
-	f *= powf (10.0f, sign * exp);
+	f *= pow10f (sign, exp);
 
 ret:
 	for (; ch != '\n'; ch = fgetc (file));
@@ -73,6 +76,8 @@ int main (int argc, char *argv[])
 	float f;
 
 	(void)argv;
+
+	setvbuf (stdin, NULL, _IOFBF, 1 << 20);
 
 	if (argc == 1) {
 		while (custom3 (stdin, &f))
