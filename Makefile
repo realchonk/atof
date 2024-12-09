@@ -3,23 +3,25 @@ FUNCS = empty custom2 dumb
 # uncomment this line for more functions to benchmark
 #FUNCS = empty xstrtof xstrtod xstrtold xatof custom custom_fast_isdigit dumb
 
+ALL = ${FUNCS} custom3 dumb2
+
 # number of times to repeat data.in
 N = 16384
 
 FAST_POW10F = 1
 
 COPT = -O2 -march=native
-CFLAGS = -std=c99 -Wall -Wextra ${COPT}
+CFLAGS = -std=c99 -Wall -Wextra -D_GNU_SOURCE=1 -D_BSD_SOURCE=1 ${COPT}
 
-all: ${FUNCS} custom3 dumb2
+all: ${ALL}
 
-run: ${FUNCS} custom3 dumb2 $N.dat
-	for f in ${FUNCS} custom3 dumb2; do	\
-		./bench $$f $N;			\
+run: ${ALL} $N.dat
+	for f in ${ALL}; do	\
+		./bench $$f $N;	\
 	done
 
 clean:
-	rm -f ${FUNCS} custom3 mmap *.core
+	rm -f ${ALL} *.core
 
 distclean: clean
 	rm -f *.dat
