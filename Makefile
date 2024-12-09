@@ -1,7 +1,7 @@
 FUNCS = empty custom2 dumb
 
 # uncomment this line for more functions to benchmark
-#FUNCS = empty xstrtof xstrtod xstrtold xatof custom custom_fast_isdigit dumb
+#FUNCS = empty xstrtof xstrtod xstrtold xatof custom custom_fast_isdigit custom2 dumb
 
 ALL = ${FUNCS} custom3 dumb2 custom4
 
