@@ -30,17 +30,8 @@ distclean: clean
 ${FUNCS}: test.c
 	${CC} -o $@ test.c ${CFLAGS} -DFUNC=$@ -DFUNC_$@=1 ${CPPFLAGS} -lm
 
-custom3: custom3.c
-	${CC} -o $@ custom3.c ${CFLAGS} ${CPPFLAGS} -lm
-
-mmap: mmap.c
-	${CC} -o $@ mmap.c ${CFLAGS} ${CPPFLAGS} -lm
-
-dumb2: dumb2.c
-	${CC} -o $@ dumb2.c ${CFLAGS} ${CPPFLAGS} -lm
-
-custom4: custom4.c
-	${CC} -o $@ custom4.c ${CFLAGS} ${CPPFLAGS} -lm
+.c:
+	${CC} -o $@ $< ${CFLAGS} ${CPPFLAGS}
 
 $N.dat:
 	rm -f $@
